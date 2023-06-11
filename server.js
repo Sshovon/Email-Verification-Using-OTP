@@ -1,15 +1,44 @@
 const express = require('express')
 const app  = express()
 require('dotenv').config()
-const {createClient} = require('redis')
 
+require('./src/db/mongoose')
+const redis = require("redis")
+const client = redis.createClient()
 const PORT = process.env.PORT || 5000
-
 app.use(express.json()) //parse json
 
-app.post('/o',(req,res)=>{
 
+const userRoutes = require('./src/routes/userRoutes')
+
+
+app.use('/user',userRoutes)
+
+
+
+app.post('/create-backup',async(req,res)=>{
+    await client.connect()
+    const {email,password}=req.body
+
+
+    console.log(response)
+
+    client.quit()
+    res.send(response)
 })
+
+
+
+
+
+
+app.get('/get',async(req,res)=>{
+    const {key} = req.body
+    await client.connect()
+    const response = await client.get(key)
+    res.send(response)
+})
+
 
 
 

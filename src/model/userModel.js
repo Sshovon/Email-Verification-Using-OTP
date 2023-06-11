@@ -55,7 +55,6 @@ userSchema.methods.toJSON = function () {
   let user = this
   user = user.toObject()
 
-  delete user.password;
   delete user._id
   delete user.__v
   console.log(user)

@@ -10,9 +10,10 @@ app.use(express.json()) //parse json
 
 
 const userRoutes = require('./src/routes/userRoutes')
-
+const otpRoutes = require('./src/routes/otpRoutes')
 
 app.use('/user',userRoutes)
+app.use('/otp',otpRoutes)
 
 
 

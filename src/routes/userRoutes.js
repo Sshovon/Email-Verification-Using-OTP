@@ -14,7 +14,7 @@ router.post('/email/verify', async (req, res) => {
         const { email } = req.body
         const cacheRes = await checkCache(email)
         if (cacheRes) {
-            return res.status(200).send({ message: "Email already exists" })
+            return res.status(409).send({ message: "Email already exists" })
         }
         const otp = otpGen(4)
         mailSender(email, otp)
@@ -22,7 +22,7 @@ router.post('/email/verify', async (req, res) => {
         // console.log(genHash(email))
         await setCache(genHash(email), otp, 90)
 
-        res.send({ message: "OK" })
+        res.status(200).send({ message: "OK" })
 
 
     } catch (e) {
@@ -40,7 +40,7 @@ router.post('/register', async (req, res) => {
         await user.save()
         await setCache(email, JSON.stringify(user))
 
-        res.send(user)
+        res.status(201).send(user)
 
     } catch (e) {
 
@@ -58,13 +58,13 @@ router.post('/authenticate', async (req, res) => {
         const parsedCachedUserInfo = JSON.parse(cachedUserInfo)
         if (!cachedUserInfo) {
             // check main db
-            return res.status(200).send({ message: "Email is not registered", isVerified: false })
+            return res.status(401).send({ message: "Email is not registered", isVerified: false })
         }
         const isMatch = await bcryptjs.compare(password, parsedCachedUserInfo.password);
         if (isMatch) {
             return res.status(200).send({ isVerified: true })
         } else {
-            return res.status(200).send({ isVerified: false })
+            return res.status(401).send({ isVerified: false })
 
         }
     }catch(e){

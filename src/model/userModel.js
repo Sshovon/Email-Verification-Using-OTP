@@ -30,8 +30,8 @@ const userSchema = new mongoose.Schema({
   isBackedup:{
     type:Boolean,
     default:false
-  }
-
+  },
+  
 });
 
 /////// Instance Methods ////////

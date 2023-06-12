@@ -57,6 +57,7 @@ router.post('/authenticate', async (req, res) => {
         const cachedUserInfo = await checkCache(email)
         const parsedCachedUserInfo = JSON.parse(cachedUserInfo)
         if (!cachedUserInfo) {
+            // check main db
             return res.status(200).send({ message: "Email is not registered", isVerified: false })
         }
         const isMatch = await bcryptjs.compare(password, parsedCachedUserInfo.password);
@@ -70,6 +71,7 @@ router.post('/authenticate', async (req, res) => {
         res.status(400).send({message:e.message})
     }
 })
+
 
 
 

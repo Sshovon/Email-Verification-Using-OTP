@@ -57,7 +57,6 @@ userSchema.methods.toJSON = function () {
 
   delete user._id
   delete user.__v
-  console.log(user)
   return user
 }
 

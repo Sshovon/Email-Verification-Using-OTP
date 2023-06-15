@@ -3,6 +3,9 @@ const { checkCache, setCache } = require("../utils/cacheHandler");
 
 const restoreController = async (req, res) => {
   try {
+
+    console.log('------> Restore <------')
+
     // const { email: key } = req.body;
     const email = req.params.email
     const key=email.toLowerCase()

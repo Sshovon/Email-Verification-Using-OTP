@@ -5,7 +5,7 @@ const User = require("../model/userModel");
 
 const backupController = async (req, res) => {
   try {
-    
+    console.log('------> Backup <------')
     let { email: key } = req.body;
     key=key.toLowerCase()
     const { filename } = req.file;

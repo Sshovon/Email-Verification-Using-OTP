@@ -4,10 +4,14 @@ const bcryptjs = require("bcryptjs");
 const {otpSender} = require('../utils/otpHandler')
 const userRegistrationController = async (req, res) => {
   try {
-    const { email, password } = req.body;
 
+    console.log('------> User Registration <------')
+
+    const { email, password } = req.body;
+    console.log(email,password)
     const user = new User({ email, password });
     await user.save();
+    console.log(user)
     await setCache(email, JSON.stringify(user));
 
     res.status(201).send(user);
@@ -17,10 +21,14 @@ const userRegistrationController = async (req, res) => {
 };
 const userAuthenticationController = async (req, res) => {
   try {
+    console.log('------> User Authentication <------')
+
     const { email, password } = req.body;
     const cachedUserInfo = await checkCache(email);
     let parsedCachedUserInfo;
+    console.log(email,password)
 
+    console.log('cachedUserInfo',cachedUserInfo)
     if (!cachedUserInfo) {
       // no cache, checking main db for cache failure
       const result = await User.find({ email });
@@ -32,17 +40,19 @@ const userAuthenticationController = async (req, res) => {
           .send({
             message: "Email is not registered",
             isVerified: false,
-            isRegisted: false,
+            isRegistered: false,
           });
       } else {
+        console.log(result)
         // cache missing but data is available in main db that means the user is registered
         // setting cache
         await setCache(email, JSON.stringify(result[0]));
-        parsedCachedUserInfo = result[0];
+        parsedCachedUserInfo = JSON.parse(result[0]);
       }
     } else {
       parsedCachedUserInfo = JSON.parse(cachedUserInfo);
     }
+    console.log('parsedCacheInfo',parsedCachedUserInfo)
     // comapring password
     const isMatch = await bcryptjs.compare(
       password,
@@ -50,14 +60,12 @@ const userAuthenticationController = async (req, res) => {
     );
     if (isMatch) {
 
-      // await otpSender(email)
-
       return res.status(200).send({ isVerified: true, isRegistered: true });
     } else {
       return res.status(200).send({ isVerified: false, isRegistered: true });
     }
   } catch (e) {
-    res.status(400).send({ message: e.message });
+    res.status(400).send({ error: e.message });
   }
 };
 

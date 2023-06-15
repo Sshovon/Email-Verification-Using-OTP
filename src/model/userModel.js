@@ -12,13 +12,13 @@ const userSchema = new mongoose.Schema({
 
     validate(value) {
       if (!validator.isEmail(value)) {
-        throw new Error("Email is not an valid one!!!");
+        throw new Error("Invalid Email Format");
       }
     },
   },
   password: {
     type: String,
-    minlength: 6,
+    // minlength: 6,
     trim: true,
     required: true,
   },
@@ -33,20 +33,6 @@ const userSchema = new mongoose.Schema({
   },
   
 });
-
-/////// Instance Methods ////////
-
-userSchema.methods.toJSON = function () {
-  const user = this;
-  const userObject = user.toObject(); // converting mongoose document to plain js object
-  delete userObject.password;
-  return userObject;
-};
-
-
-
-
-
 
 
 /// Instance Methods //////
